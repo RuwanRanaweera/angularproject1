@@ -9,7 +9,7 @@ const userSchema = new schema({
     password: {type: String, required: true}
 });
 
-module.exports = mongoose.model("User",userSchema);
+const User = module.exports = mongoose.model("User",userSchema);
 
 module.exports.saveUser = function (newUser, callback) {
 
@@ -21,4 +21,28 @@ module.exports.saveUser = function (newUser, callback) {
            newUser.save(callback);
         });
     });
+};
+
+module.exports.findByEmail = function (email, callback) {
+
+        const query = {email: email};
+        User.findOne(query, callback);
+};
+
+module.exports.passwordCheck = function(plainpassword, hash, callback){
+
+    bcrypt.compare(plainpassword, hash, function(err, res) {
+    //    console.log(res);
+    if(err) throw err;
+
+    if (res) {
+        callback(null,res);
+    }
+    });
+};
+
+
+module.exports.findUserbyId = function(id, callback) {
+
+    User.findOne(id, this.callback);
 };
